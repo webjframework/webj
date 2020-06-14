@@ -1,0 +1,20 @@
+#!/bin/bash
+
+File='/app/utils/webj_webjdata.ini'
+originalstr='@DATABASE_SETTINGS@'
+if grep $originalstr  $File ; then 
+
+Filetext=$(<$File)
+IFS='&' read first  currentsettings <<<$Filetext
+
+echo 'FOUND DATABASE_SETTINGS :'$currentsettings
+
+DATABASE_URL=${DATABASE_URL//"postgres://"/""}
+IFS='@' read PART1 PART2 <<<$DATABASE_URL
+IFS=':' read DBUSER  DBPASS <<<$PART1
+IFS='/' read HOSTPORT  DBNAME <<<$PART2
+IFS=':' read DBHOST DBPORT  <<<$HOSTPORT
+newstr="$originalstr HOST=$DBHOST DBTYPE=2 PORT=$DBPORT DBNAME=$DBNAME DBUSER=$DBUSER DBPASS=$DBPASS "
+echo $newstr
+sed -i -e 's/'"$currentsettings"'/'"$newstr"'/g' $File
+fi

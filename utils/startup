@@ -1,0 +1,21 @@
+#!/bin/bash
+echo "WebJ Script Starts " 
+echo "DATABASE: " $DATABASE_URL
+
+#mkdir target
+
+mkdir target/tomcat.$PORT
+mkdir target/tomcat.$PORT/webapps
+
+cp /app/utils/*.ini target/tomcat.$PORT/webapps/
+
+#cd /#git clone https://github.com/webjframework/webj.git
+
+wget -c -N https://raw.githubusercontent.com/webjframework/webj/master/WebJ.war  -P /app/utils/
+
+
+java  -Xmx300m -Xss512k -Dfile.encoding=UTF-8  -jar /app/utils/webapp-runner.jar --port $PORT --expanded-dir-name WEBJ --expand-war /app/utils/WebJ.war
+
+#Dont put anything here ...(after deployment)
+done
+
